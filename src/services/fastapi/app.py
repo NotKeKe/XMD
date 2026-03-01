@@ -1,7 +1,10 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 import asyncio
+
+from src.config import DOWNLOAD_DIR
 
 from .utils import STATIC, TEMPLATE
 
@@ -20,6 +23,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.mount("/static", STATIC, name="static")
+app.mount("/media", StaticFiles(directory=DOWNLOAD_DIR), name="media")
 app.include_router(api.router)
 
 @app.get("/", response_class=HTMLResponse)

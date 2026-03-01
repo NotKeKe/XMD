@@ -88,13 +88,22 @@ class TweetMediaDownloader:
     async def get_info(tweet_id: str) -> tuple[dict[str, Any], Tweet]:
         app = await _get_client()
         
-        tweet = await app.tweet_detail(tweet_id)
+        try:
+            tweet = await app.tweet_detail(tweet_id)
+        except Exception as e:
+            logger.error(f'Failed to get tweet info {tweet_id}: {e}')
+            raise
 
-        urls: list[tuple[str, str]] = [] # (url, type)
+        urls: list[dict[str, str]] = [] # list of {url, thumbnail, type}
         for m in tweet.media:  
             m = cast(Media, m)
             stream = await m.best_stream()
-            if stream: urls.append((stream.direct_url, m.type))
+            if stream: 
+                urls.append({
+                    "url": stream.direct_url,
+                    "thumbnail": m.media_url_https,
+                    "type": m.type
+                })
 
         replied_info = {
             'text': tweet.text,

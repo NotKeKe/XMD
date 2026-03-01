@@ -8,8 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+**/node_modules
 
 # data
 data
 logs
 config.toml
+**/js
+watch.bat
+frontend/static/css/output.css

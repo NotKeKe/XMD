@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+body {
+	background-color: #ffffff;
+	color: #1a1a1a;
+	font-family: "Chiron GoRound TC", sans-serif;
+}
+
+.nav-link {
+	@apply px-4 py-2 text-gray-500 hover:text-black hover:font-bold transition-all duration-200 font-medium border-b-2 border-transparent relative;
+}
+
+.nav-link span {
+	@apply inline-block transition-transform duration-200;
+}
+
+.nav-link:hover span {
+	@apply -translate-y-0.5;
+}
+
+.nav-link.active {
+	@apply text-black font-bold border-black;
+}
+

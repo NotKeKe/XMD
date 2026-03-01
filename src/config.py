@@ -7,10 +7,10 @@ BASE_DIR = Path(__file__).parent.parent
 DATA_DIR = Path(BASE_DIR / "data")
 DATA_DIR.mkdir(exist_ok=True)
 
-STATIC_DIR = Path(BASE_DIR / "static")
+STATIC_DIR = Path(BASE_DIR / "frontend" / "static")
 STATIC_DIR.mkdir(exist_ok=True)
 
-TEMPLATES_DIR = Path(BASE_DIR / "templates")
+TEMPLATES_DIR = Path(BASE_DIR / "frontend" / "templates")
 TEMPLATES_DIR.mkdir(exist_ok=True)
 
 # load config

@@ -39,6 +39,7 @@ async def get_noti_tweets():
             continue  
   
         parent = await tweet.get_reply_to()  
+
         if not parent:
             continue  
 

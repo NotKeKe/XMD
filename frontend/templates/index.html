@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-TW">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>XMD - Media Downloader</title>
+		<link href="/static/css/output.css" rel="stylesheet" />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Chiron+GoRound+TC:wght@400;500;700&display=swap"
+			rel="stylesheet"
+		/>
+		<script src="https://unpkg.com/lucide@latest"></script>
+		<style>
+			.hidden {
+				display: none;
+			}
+			@keyframes spin {
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
+				}
+			}
+			.animate-spin-fast {
+				animation: spin 0.8s linear infinite;
+			}
+		</style>
+	</head>
+	<body class="min-h-screen flex flex-col">
+		<nav class="border-b border-gray-200 bg-white sticky top-0 z-50">
+			<div
+				class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between"
+			>
+				<div class="flex items-center gap-2">
+					<i data-lucide="download" class="w-6 h-6"></i>
+					<span class="text-xl font-bold tracking-tight">XMD</span>
+				</div>
+				<div class="flex gap-4">
+					<button id="nav-download" class="nav-link active">
+						<span>下載</span>
+					</button>
+					<button id="nav-overview" class="nav-link"><span>總覽</span></button>
+				</div>
+			</div>
+		</nav>
+
+		<main class="flex-grow max-w-5xl mx-auto w-full px-4 py-8">
+			<!-- Download View -->
+			<section id="download-view" class="space-y-8">
+				<div class="space-y-4">
+					<h1 class="text-3xl font-bold">下載媒體</h1>
+					<div class="flex gap-2">
+						<input
+							type="text"
+							id="url-input"
+							placeholder="貼入 Twitter 網址..."
+							class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+						/>
+						<button
+							id="get-info-btn"
+							class="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2"
+						>
+							<i data-lucide="search" class="w-5 h-5"></i>
+							獲取資訊
+						</button>
+					</div>
+				</div>
+
+				<div id="info-results" class="hidden space-y-6">
+					<div class="p-6 border border-gray-200 rounded-xl space-y-4">
+						<div class="flex justify-between items-center">
+							<h2 class="text-xl font-semibold flex items-center gap-2">
+								<i data-lucide="info" class="w-5 h-5"></i>
+								媒體列表 (<span id="media-count">0</span>)
+							</h2>
+							<button
+								id="download-all-btn"
+								class="text-sm font-medium px-4 py-2 border border-black rounded-md hover:bg-black hover:text-white transition-all"
+							>
+								全部下載
+							</button>
+						</div>
+
+						<div id="media-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+							<!-- Media Items will be injected here -->
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- Overview View -->
+			<section id="overview-view" class="hidden space-y-8">
+				<div class="flex justify-between items-end">
+					<h1 class="text-3xl font-bold">媒體總覽</h1>
+					<div class="flex border border-gray-200 rounded-lg overflow-hidden">
+						<button
+							data-filter="all"
+							class="filter-btn px-4 py-2 bg-black text-white"
+						>
+							全部
+						</button>
+						<button
+							data-filter="photo"
+							class="filter-btn px-4 py-2 bg-white text-gray-600 hover:bg-gray-50"
+						>
+							圖片
+						</button>
+						<button
+							data-filter="video"
+							class="filter-btn px-4 py-2 bg-white text-gray-600 hover:bg-gray-50 border-l border-gray-200"
+						>
+							影片
+						</button>
+					</div>
+				</div>
+
+				<div
+					id="overview-grid"
+					class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+				>
+					<!-- History items will be injected here -->
+				</div>
+			</section>
+		</main>
+
+		<footer
+			class="py-8 text-center text-gray-400 text-sm border-t border-gray-100"
+		>
+			&copy; 2026 XMD Media Downloader
+		</footer>
+
+		<script type="module" src="/static/js/app.js"></script>
+		<script>
+			lucide.createIcons();
+		</script>
+	</body>
+</html>

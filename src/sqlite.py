@@ -124,3 +124,10 @@ async def get_all_dc_channels() -> list[dict]:
     ) as cursor:
         rows = await cursor.fetchall()
         return [dict(row) for row in rows]
+async def get_all_tweet_media() -> list[dict]:
+    db = await get_db()
+    async with db.execute(
+        "SELECT * FROM tweets_media ORDER BY downloaded_at DESC", 
+    ) as cursor:
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]

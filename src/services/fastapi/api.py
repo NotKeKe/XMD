@@ -6,7 +6,8 @@ import asyncio
 
 from .type import APIDownloadModel
 
-from src.services.twitter.utils import TweetMediaDownloader, get_tweet_id
+from src.services.twitter.utils import TweetMediaDownloader, get_tweet_id, _get_client
+from src.sqlite import get_all_tweet_media
 
 router = APIRouter(prefix='/api')
 
@@ -29,9 +30,20 @@ async def download(model: APIDownloadModel):
     # 先試著取得 tweet obj
     tweet_id = get_tweet_id(model.url)
     tweet = tweet_objs.get(tweet_id)
-    results = await TweetMediaDownloader.download_media(
-        **({'tweet': tweet} if tweet else {'tweet_id': tweet_id}) # type: ignore
-    )
+    
+    if not tweet:
+        app = await _get_client()
+        tweet = await app.tweet_detail(tweet_id)
+        tweet_objs[tweet_id] = tweet
+
+    results = []
+    if model.indices is not None:
+        # Selective download
+        for idx in model.indices:
+            results.append(await TweetMediaDownloader.download_media_raw(tweet, idx))
+    else:
+        # Download all
+        results = await TweetMediaDownloader.download_media(tweet=tweet)
 
     if not results:
         return JSONResponse({"error": "No media found"}, status_code=404)
@@ -49,3 +61,7 @@ async def download(model: APIDownloadModel):
         return StreamingResponse(zs, media_type="application/zip", headers=headers)
     else:
         return FileResponse(path=results[0], filename=results[0].name)
+
+@router.get('/media', response_class=JSONResponse)
+async def get_media_history():
+    return await get_all_tweet_media()

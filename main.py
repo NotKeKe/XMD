@@ -12,7 +12,7 @@ SERV_TASKS: list[asyncio.Task] = []
 
 async def main():
     services = [
-        DiscordService,
+        # DiscordService,
         FastAPIService,
         TwitterService,
     ]
