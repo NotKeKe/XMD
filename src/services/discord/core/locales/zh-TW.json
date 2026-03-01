@@ -1,0 +1,30 @@
+{
+    "name": {
+        "set_channel": "設定下載頻道",
+        "my_id": "我的id",
+        "help": "幫助"
+    },
+    "description": {
+        "set_channel": "設定下載頻道。",
+        "my_id": "取得你(使用者)在 Discord 的 ID。",
+        "help": "取得指令幫助。"
+    },
+    "params_desc": {},
+    "components": {
+        "embed_set_channel": [
+            {
+                "title": "設定推文下載頻道",
+                "description": "## 簡介\n將此頻道設定為**推文下載頻道**後，你可以直接在這裡放入 X(Twitter) 的連結，而我就會直接將該貼文的圖片、影片下載至你在 config.toml 所設定的路徑。\n同時也會將連結傳到這裡。\n\n## 當前狀態\n- 該頻道是否為**推文下載頻道**: {enable}"
+            }
+        ],
+        "button_enable_channel_disable": "取消下載頻道",
+        "button_enable_channel_enable": "開啟下載頻道",
+        "button_update_embed": "刷新",
+        "embed_help": [
+            {
+                "title": "指令幫助",
+                "description": "這裡還是空的"
+            }
+        ]
+    }
+}

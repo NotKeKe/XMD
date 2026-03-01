@@ -1,7 +1,9 @@
 import aiosqlite
+from typing import Optional
 from .config import DB_PATH
 
 db_conn = None
+_db_init = False
 
 async def get_db():
     global db_conn
@@ -10,9 +12,13 @@ async def get_db():
         await db_conn.execute("PRAGMA journal_mode=WAL")
         await db_conn.execute("PRAGMA synchronous=NORMAL")
         db_conn.row_factory = aiosqlite.Row
+
+        if not _db_init:
+            await init_db()
     return db_conn
 
 async def init_db():
+    global _db_init
     db = await get_db()
     
     await db.execute("""
@@ -38,7 +44,17 @@ async def init_db():
     # 針對 tweet_id 單獨建立索引
     await db.execute("CREATE INDEX IF NOT EXISTS idx_media_tweet_id ON tweets_media (tweet_id)")
 
+    await db.execute("""
+    CREATE TABLE IF NOT EXISTS channels (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        channel_id TEXT,
+        enable BOOLEAN,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
     await db.commit()
+    _db_init = True
 
 async def insert_passed_tweet(tweet_id: str):
     db = await get_db()
@@ -74,3 +90,37 @@ async def is_tweet_media_exists(tweet_id: str, media_id: str) -> bool:
         (tweet_id, media_id)
     ) as cursor:
         return await cursor.fetchone() is not None
+
+async def update_dc_channel(channel_id: str, enable: bool):
+    db = await get_db()
+    await db.execute(
+        "INSERT OR REPLACE INTO channels (channel_id, enable) VALUES (?, ?)", 
+        (channel_id, enable)
+    )
+    await db.commit()
+
+async def get_dc_channel_enable(channel_id: str) -> bool:
+    db = await get_db()
+    async with db.execute(
+        "SELECT enable FROM channels WHERE channel_id = ? LIMIT 1", 
+        (channel_id,)
+    ) as cursor:
+        row = await cursor.fetchone()
+        return row['enable'] if row else False
+
+async def get_dc_channel(channel_id: str) -> Optional[dict]:
+    db = await get_db()
+    async with db.execute(
+        "SELECT * FROM channels WHERE channel_id = ? LIMIT 1", 
+        (channel_id,)
+    ) as cursor:
+        row = await cursor.fetchone()
+        return dict(row) if row else None
+
+async def get_all_dc_channels() -> list[dict]:
+    db = await get_db()
+    async with db.execute(
+        "SELECT * FROM channels", 
+    ) as cursor:
+        rows = await cursor.fetchall()
+        return [dict(row) for row in rows]

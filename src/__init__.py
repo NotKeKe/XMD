@@ -50,7 +50,7 @@ def init_me():
             self.level = level
 
         def write(self, message):
-            if message.rstrip() != "":
+            if message.rstrip() != "" and message.rstrip() != '^':
                 self.logger.log(self.level, message.rstrip())
 
         def flush(self):

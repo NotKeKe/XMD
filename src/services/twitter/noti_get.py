@@ -6,7 +6,7 @@ import logging
 import asyncio
 import random
 
-from src.config import X_USER_ID, X_BOT_ID, ONLY_WATCH_USER
+from src.config import X_USER_ID, X_BOT_ID, X_ONLY_WATCH_USER
 from src.sqlite import is_passed_tweet_exists
 from src.queues import noti_queue
 
@@ -22,6 +22,7 @@ async def get_noti_tweets():
         for attempt in range(3):  
             try:  
                 results = await app.search(X_BOT_ID, filter_=SearchFilters.Latest, wait_time=10)  
+                break
             except RateLimitReached as e:  
                 if attempt < 3 - 1:  
                     await asyncio.sleep((e.retry_after or 120) + random.randint(10, 20))
@@ -34,14 +35,14 @@ async def get_noti_tweets():
 
     for tweet in results.results:  
         tweet = cast(Tweet, tweet)
-        if not (hasattr(tweet, "is_reply") and tweet.is_reply):  
+        if not (hasattr(tweet, "is_reply") and tweet.is_reply):
             continue  
   
         parent = await tweet.get_reply_to()  
-        if not parent:  
+        if not parent:
             continue  
 
-        if ONLY_WATCH_USER:
+        if X_ONLY_WATCH_USER:
             if parent.author and parent.author.id != X_USER_ID:
                 logger.info(f'Tweet {parent.id} is not from user {X_USER_ID}, skip')
                 continue

@@ -15,12 +15,35 @@ TEMPLATES_DIR.mkdir(exist_ok=True)
 
 # load config
 default_config_toml_text = '''
+[services_open]
+# 組件開關
+# TODO: 實作 true/false 的邏輯
+fastapi = true
+discord = true
+
 [twitter]
+# ----- 基礎配置 -----
 user_id = "YOUR_USER_ID"
 bot_id = "YOUR_BOT_ID"
 
+# ----- services setting -----
+# 是否只看 user_id 標記 bot_id 的推文，如果為 false，則會看所有標記 bot_id 的推文。 (true/false)
+x_only_you = true
+
 [discord]
+# ----- 基礎配置 -----
 bot_token = "YOUR_DISCORD_BOT_TOKEN"
+user_id = "YOUR_DISCORD_USER_ID"
+
+# ----- services setting -----
+discord = true
+discord_prefix = "=["
+# 是否只接收來自 discord.user_id 的訊息
+discord_only_you = true
+
+[fastapi]
+host = "127.0.0.1"
+port = 8000
 
 [settings]
 cookies_file = "./data/cookies.json"
@@ -30,15 +53,6 @@ download_path = "./data/downloads"
 log_path = "./logs"
 # 資料庫儲存路徑
 db_path = "./data/database.db"
-# 是否只看 user_id 標記 bot_id 的推文，如果為 false，則會看所有標記 bot_id 的推文。 (true/false)
-only_you = true
-
-[components]
-# TODO: 實作 true/false 的邏輯
-fastapi = true
-fastapi_host = "127.0.0.1"
-fastapi_port = 8000
-discord = true
 '''.strip()
 
 CONFIG_TOML = BASE_DIR / "config.toml"
@@ -52,10 +66,11 @@ if not CONFIG_TOML.exists():
 with open(CONFIG_TOML, "rb") as f:
     config = tomllib.load(f)
 
+services_open = config.get('services_open', {})
 x_config = config.get('twitter', {})
-settings = config.get('settings', {})
 discord_config = config.get('discord', {})
-components = config.get('components', {})
+fastapi_config = config.get('fastapi', {})
+settings = config.get('settings', {})
 
 # ---------- settings ----------
 # load cookies
@@ -79,19 +94,28 @@ LOG_DIR = Path(settings.get('log_path', BASE_DIR / "logs"))
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = Path(settings.get('db_path', DATA_DIR / "database.db"))
-DB_PATH.mkdir(parents=True, exist_ok=True)
-
-ONLY_WATCH_USER = settings.get('only_you', True)
+DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 # ---------- twitter ----------
 X_USER_ID = x_config.get('user_id', '')
 X_BOT_ID = x_config.get('bot_id', '')
+X_ONLY_WATCH_USER = x_config.get('x_only_you', True)
 
 # ---------- discord ----------
 DISCORD_BOT_TOKEN = discord_config.get('bot_token', '')
+DISCORD_USER_ID = discord_config.get('user_id', '').strip()
+DISCORD_PREFIX = discord_config.get('discord_prefix', '=[')
+DISCORD_ONLY_YOU = discord_config.get('discord_only_you', True)
+DISCORD_I18N_JSON_DIR = BASE_DIR / 'src/services/discord/core/locales'
 
-# ---------- components ----------
-FASTAPI_HOST = components.get('fastapi_host', '127.0.0.1')
-FASTAPI_PORT = components.get('fastapi_port', 8000)
-FASTAPI_ENABLED = components.get('fastapi', True)
-DISCORD_ENABLED = components.get('discord', True)
+# ---------- fastapi ----------
+FASTAPI_HOST = fastapi_config.get('host', '127.0.0.1')
+try:
+    FASTAPI_PORT = int(fastapi_config.get('port', 8000))
+except:
+    print('fastapi, port 被設置為非 int 的物件，請更改配置後重新嘗試。')
+    exit(1)
+
+# ---------- services_open ----------
+FASTAPI_ENABLED = services_open.get('fastapi', True)
+DISCORD_ENABLED = services_open.get('discord', True)

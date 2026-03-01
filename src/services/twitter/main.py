@@ -1,6 +1,7 @@
 import logging
 import asyncio
 import random
+from tweety.exceptions import TwitterError
 
 from src.abc import ServicesABC
 from .noti_get import get_noti_tweets
@@ -13,10 +14,12 @@ class TwitterService(ServicesABC):
         while True:
             try:
                 await get_noti_tweets()
+            except TwitterError as e:
+                logger.error(f'Failed to get tweets: {e}')
             except Exception as e:
                 logger.error('Failed to get tweets', exc_info=True)
 
-            await asyncio.sleep(random.uniform(110, 130))
+            await asyncio.sleep(60*5 + random.uniform(10, 20)) # 休息至少 5 mins
 
     async def stop(self):
         if client:
