@@ -36,6 +36,7 @@ A Python-based <strong>X (Twitter) media downloader</strong> integrating a Disco
 ## 🛠️ Tech Stack
 
 - Python 3.12
+- **[Tweety](https://github.com/mahrtayyab/tweety)**
 - FastAPI (Web interface)
 - TypeScript (Web interface)
 - Tailwind CSS (Web interface)

@@ -36,6 +36,7 @@
 ## 🛠️ 技術使用
 
 - python 3.12
+- **[tweety](https://github.com/mahrtayyab/tweety)**
 - fastapi (用於提供 Web 介面)
 - typescript (用於提供 Web 介面)
 - tailwindcss (用於提供 Web 介面)
@@ -67,7 +68,7 @@ cd XMD
    - TypeScript: `npm run build`
    - CSS (Tailwind): `npm run build:css`
 
-### 3. 設定
+### 4. 設定
 
 - 修改你的 config.toml: [config.toml 的介紹](#configtoml-description)。
 - 創建 `data/` 資料夾。
@@ -84,7 +85,7 @@ cd XMD
     }
     ```
 
-### 4. 啟動
+### 5. 啟動
 
 - **使用 uv (推薦)**
     - 同步虛擬環境：`uv sync`
