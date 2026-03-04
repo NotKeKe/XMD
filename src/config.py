@@ -16,10 +16,9 @@ TEMPLATES_DIR.mkdir(exist_ok=True)
 # load config
 default_config_toml_text = '''
 [services_open]
-# 組件開關
-# TODO: 實作 true/false 的邏輯
+# 組件開關 (全部名稱都應該是小寫), 值: true/false
 fastapi = true
-discord = true
+discord = false
 
 [twitter]
 # ----- 基礎配置 -----
@@ -39,13 +38,14 @@ user_id = "YOUR_DISCORD_USER_ID"
 discord = true
 discord_prefix = "=["
 # 是否只接收來自 discord.user_id 的訊息
-discord_only_you = true
+discord_only_you = false
 
 [fastapi]
 host = "127.0.0.1"
 port = 8000
 
 [settings]
+# twitter cookie 儲存路徑
 cookies_file = "./data/cookies.json"
 # 圖片、影片儲存路徑
 download_path = "./data/downloads"

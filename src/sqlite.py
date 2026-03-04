@@ -47,11 +47,24 @@ async def init_db():
     await db.execute("""
     CREATE TABLE IF NOT EXISTS channels (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        channel_id TEXT,
+        channel_id TEXT UNIQUE,
         enable BOOLEAN,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     """)
+
+    # 清理可能存在的重複資料 (保留最新的一筆)
+    await db.execute("""
+    DELETE FROM channels 
+    WHERE id NOT IN (
+        SELECT MAX(id) 
+        FROM channels 
+        GROUP BY channel_id
+    )
+    """)
+
+    # 確保現有表格也有唯一索引 (針對舊有資料庫)
+    await db.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_channels_channel_id ON channels (channel_id)")
 
     await db.commit()
     _db_init = True
@@ -93,10 +106,12 @@ async def is_tweet_media_exists(tweet_id: str, media_id: str) -> bool:
 
 async def update_dc_channel(channel_id: str, enable: bool):
     db = await get_db()
-    await db.execute(
-        "INSERT OR REPLACE INTO channels (channel_id, enable) VALUES (?, ?)", 
-        (channel_id, enable)
-    )
+    # 使用 UPSERT 語法，如果 channel_id 已存在則更新 enable 狀態
+    await db.execute("""
+        INSERT INTO channels (channel_id, enable) 
+        VALUES (?, ?) 
+        ON CONFLICT(channel_id) DO UPDATE SET enable = excluded.enable
+    """, (channel_id, enable))
     await db.commit()
 
 async def get_dc_channel_enable(channel_id: str) -> bool:
@@ -124,6 +139,7 @@ async def get_all_dc_channels() -> list[dict]:
     ) as cursor:
         rows = await cursor.fetchall()
         return [dict(row) for row in rows]
+        
 async def get_all_tweet_media() -> list[dict]:
     db = await get_db()
     async with db.execute(

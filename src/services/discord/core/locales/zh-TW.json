@@ -2,14 +2,18 @@
     "name": {
         "set_channel": "設定下載頻道",
         "my_id": "我的id",
-        "help": "幫助"
+        "help": "幫助",
+        "download": "下載推文"
     },
     "description": {
         "set_channel": "設定下載頻道。",
         "my_id": "取得你(使用者)在 Discord 的 ID。",
-        "help": "取得指令幫助。"
+        "help": "取得指令幫助。",
+        "download": "取得 X (Twitter) 推文的媒體檔案。"
     },
-    "params_desc": {},
+    "params_desc": {
+        "download_url": "X (Twitter) 貼文的連結。"
+    },
     "components": {
         "embed_set_channel": [
             {
@@ -23,7 +27,7 @@
         "embed_help": [
             {
                 "title": "指令幫助",
-                "description": "這裡還是空的"
+                "description": "## 指令列表\n\n- `/set_channel`: **設定下載頻道**。管理此頻道的自動下載功能。\n- `/download <url>`: **手動下載**。輸入 X (Twitter) 連結來手動下載媒體。\n- `/my_id`: **查詢 ID**。取得你在 Discord 的使用者 ID。\n- `/help`: **指令幫助**。顯示此說明訊息。\n\n## 功能說明\n\n1. **自動下載**：使用 `/set_channel` 將頻道設定為「推文下載頻道」後，只要在該頻道貼上 X 的連結，機器人就會自動解析並下載該貼文的所有圖片與影片。\n2. **手動下載**：使用 `/download` 並提供連結，可以預覽貼文內容並選擇下載個別媒體或全部媒體。"
             }
         ]
     }

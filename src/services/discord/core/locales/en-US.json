@@ -1,0 +1,34 @@
+{
+    "name": {
+        "set_channel": "set_channel",
+        "my_id": "my_id",
+        "help": "help",
+        "download": "download"
+    },
+    "description": {
+        "set_channel": "Set the download channel.",
+        "my_id": "Get your (user) Discord ID.",
+        "help": "Get command help.",
+        "download": "Get media files from X (Twitter) post."
+    },
+    "params_desc": {
+        "download_url": "The URL of the X (Twitter) post."
+    },
+    "components": {
+        "embed_set_channel": [
+            {
+                "title": "Set Tweet Download Channel",
+                "description": "## Introduction\nAfter setting this channel as a **Tweet Download Channel**, you can directly put X(Twitter) links here, and I will download the images and videos of that post to the path you set in config.toml.\nThe link will also be sent here.\n\n## Current Status\n- Is this channel a **Tweet Download Channel**: {enable}"
+            }
+        ],
+        "button_enable_channel_disable": "Disable Download Channel",
+        "button_enable_channel_enable": "Enable Download Channel",
+        "button_update_embed": "Refresh",
+        "embed_help": [
+            {
+                "title": "Command Help",
+                "description": "## Command List\n\n- `/set_channel`: **Set Download Channel**. Manage automatic download for this channel.\n- `/download <url>`: **Manual Download**. Input X (Twitter) link to manually download media.\n- `/my_id`: **Query ID**. Get your Discord user ID.\n- `/help`: **Command Help**. Show this help message.\n\n## Features\n\n1. **Auto Download**: After setting a channel as \"Tweet Download Channel\" with `/set_channel`, simply paste X links in the channel, and the bot will automatically parse and download all images and videos.\n2. **Manual Download**: Use `/download` with a link to preview content and choose to download individual media or all media."
+            }
+        ]
+    }
+}

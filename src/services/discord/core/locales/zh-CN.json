@@ -1,0 +1,34 @@
+{
+    "name": {
+        "set_channel": "设定下载频道",
+        "my_id": "我的id",
+        "help": "帮助",
+        "download": "下载推文"
+    },
+    "description": {
+        "set_channel": "设定下载频道。",
+        "my_id": "获取你(使用者)在 Discord 的 ID。",
+        "help": "获取指令帮助。",
+        "download": "获取 X (Twitter) 推文的媒体文件。"
+    },
+    "params_desc": {
+        "download_url": "X (Twitter) 贴文的链接。"
+    },
+    "components": {
+        "embed_set_channel": [
+            {
+                "title": "设定推文下载频道",
+                "description": "## 简介\n将此频道设定为**推文下载频道**后，你可以直接在这里放入 X(Twitter) 的链接，而我就会直接将该贴文的图片、视频下载至你在 config.toml 所设定的路径。\n同时也会将链接传到这里。\n\n## 当前状态\n- 该频道是否为**推文下载频道**: {enable}"
+            }
+        ],
+        "button_enable_channel_disable": "取消下载频道",
+        "button_enable_channel_enable": "开启下载频道",
+        "button_update_embed": "刷新",
+        "embed_help": [
+            {
+                "title": "指令幫助",
+                "description": "## 指令列表\n\n- `/set_channel`: **设定下载频道**。管理此频道的自动下载功能。\n- `/download <url>`: **手动下载**。输入 X (Twitter) 链接来手动下载媒体。\n- `/my_id`: **查询 ID**。获取你在 Discord 的使用者 ID。\n- `/help`: **指令帮助**。显示此说明信息。\n\n## 功能说明\n\n1. **自动下载**：使用 `/set_channel` 将频道设定为“推文下载频道”后，只要在该频道贴上 X 的链接，机器人就会自动解析并下载该贴文的所有图片与视频。\n2. **手动下载**：使用 `/download` 并提供链接，可以预览贴文内容并选择下载個別媒体或全部媒体。"
+            }
+        ]
+    }
+}

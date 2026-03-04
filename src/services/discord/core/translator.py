@@ -10,7 +10,6 @@ import logging
 from pathlib import Path
 
 from .utils import get_bot
-from src.utils import resource_path
 from src.config import BASE_DIR
 
 DEFAULT_LANG = 'zh-TW'
@@ -88,8 +87,7 @@ class i18n(Translator):
         for l in langs:
             try:
                 path = Path(__file__).parent / 'locales' / f'{l}.json'
-                true_path = resource_path(path.relative_to(BASE_DIR))
-                async with aiofiles.open(true_path, 'rb') as f:
+                async with aiofiles.open(path, 'rb') as f:
                     self.translations[l] = json.loads(await f.read())
                     print(f'Successfully loaded {l} (translator)')
             except Exception as e:

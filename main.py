@@ -2,28 +2,17 @@ import src as _ # load logging conf
 
 import asyncio
 
-from src.services.discord.main import DiscordService
-from src.services.fastapi.main import FastAPIService
-from src.services.twitter.main import TwitterService
-
-from src.utils import close_event
+from src.utils import close_event, load_service
+from src.sqlite import init_db
 
 SERV_TASKS: list[asyncio.Task] = []
 
 async def main():
-    services = [
-        # DiscordService,
-        FastAPIService,
-        TwitterService,
-    ]
+    await init_db()
+    service_objs = await load_service()
 
-    service_objs = []
-
-    for serv in services:
-        obj = serv()
+    for obj in service_objs:
         task = asyncio.create_task(obj.run())
-
-        service_objs.append(obj)
         SERV_TASKS.append(task)
 
     try:

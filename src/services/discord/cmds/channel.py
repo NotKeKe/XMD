@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from typing import Optional
+from typing import Optional, cast
 import logging
 
 from src.sqlite import get_dc_channel_enable, update_dc_channel, get_all_dc_channels, get_dc_channel
@@ -22,7 +22,7 @@ class MyView(discord.ui.View):
         for item in self.children:
             item.disabled = True # type: ignore
         if self.message is not None:
-            await self.message.edit(view=self)
+            await self.message.edit(view=None)
 
     async def get_embed(self) -> Optional[discord.Embed]:
         ctx = self.ori_ctx
@@ -38,19 +38,38 @@ class MyView(discord.ui.View):
         
         # 抓 sqlite
         channel_data = await get_dc_channel(str(ctx.channel.id)) or {}
+        is_enable = bool(channel_data.get('enable', False))
 
         embed = discord.Embed(title=embed_title, description=embed_desc_template.format(
-            enable=bool(channel_data.get('enable', False))
+            enable=is_enable
         ))
+
+        # 順便改 view
+        child = discord.utils.find( # 找定並返回第一個符合物件
+            lambda x: isinstance(x, discord.ui.Button) and x.custom_id == 'enable_channel',   
+            self.children  
+        )
+        if child:
+            child = cast(discord.ui.Button, child)
+
+            translated_text = await get_translate( # 跟 initialize 的邏輯一樣
+                'button_enable_channel_disable' if is_enable else 'button_enable_channel_enable',
+                ctx
+            )
+
+            child.label = translated_text
+            child.emoji = '❌' if is_enable else '✅'
+            child.style = discord.ButtonStyle.danger if is_enable else discord.ButtonStyle.success
 
         return embed
 
-    async def update_embed(self, embed: discord.Embed) -> Optional[discord.Message]:
+    async def update_embed(self, embed: discord.Embed, content: Optional[str] = 'Updated!') -> Optional[discord.Message]:
         if not self.message:
             logger.warning(f'MyView didn\'t have self.message to update, but got a embed. | ctx_channel_id: {self.ori_ctx.channel.id if self.ori_ctx else None}')
             return
 
-        msg = await self.message.edit(embed=embed, view=self)
+        now = discord.utils.format_dt(discord.utils.utcnow(), 'R')
+        msg = await self.message.edit(embed=embed, view=self, content=f'{content}, {now}')
         self.message = msg
         
         return msg
@@ -78,6 +97,7 @@ class MyView(discord.ui.View):
 
                     child.label = translated_text
                     child.emoji = '❌' if is_enable else '✅'
+                    child.style = discord.ButtonStyle.danger if is_enable else discord.ButtonStyle.success
 
                 case 'update_embed':
                     translated_text = await get_translate('button_update_embed', ctx)
@@ -99,10 +119,10 @@ class MyView(discord.ui.View):
         ori = await get_dc_channel_enable(str(interaction.channel.id)) # original setting
         await update_dc_channel(str(interaction.channel.id), not ori)
 
-        await interaction.edit_original_response(content='Updated!')
-        embed = await self.get_embed()
-        if embed:
-            await self.update_embed(embed)
+        if self.message:
+            embed = await self.get_embed()
+            if embed:
+                await self.update_embed(embed, 'Updated!')
 
     @discord.ui.button(label='update', style=discord.ButtonStyle.primary, custom_id='update_embed', emoji='🔄')
     async def update_embed_callback(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -135,7 +155,7 @@ class ChannelCog(commands.Cog):
         info, tweet = await TweetMediaDownloader.get_info(tweet_id)
         await TweetMediaDownloader.download_media(tweet=tweet)
         
-        urls = [url for url, m_type in info['media']['urls']]
+        urls = [data['url'] for data in info['media']['urls']]
         await msg.channel.send(f'Total {len(urls)} media files:\n' + '\n'.join(urls))
 
     @commands.hybrid_command(name=locale_str('set_channel'), description=locale_str('set_channel'))
