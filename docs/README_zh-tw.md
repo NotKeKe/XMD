@@ -58,7 +58,7 @@ git clone https://github.com/NotKeKe/XMD.git
 cd XMD
 ```
 
-### 3. 前端 build
+### 3. 前端 build (如果使用 docker 則不需要)
 
 為了節省專案下載時間，所以該專案並沒有直接提供前端網頁的 build 結果  
 請根據以下指示去 build 前端網頁：  
@@ -121,6 +121,8 @@ cd XMD
 
 - **第一次開啟**
     - 在第一次啟動程式後，應該會看到當前目錄產生了一個 `config.toml`，並且程式自動退出。
+    - 如果你選擇使用 docker 的話，則將 `config.toml.example` 重新命名為 `config.toml`。
+        - `cp config.toml.example config.toml`
 - **services_open**
     - 其中特別需要注意的是 `services_open`，底下有 discord 與 fastapi(網頁介面)，請至少將其中一項設定為 true (代表開啟)，不然這個專案無法運行。
     - 如果你在 `services_open` 中開啟了 discord，請務必到 `discord` 的基礎配置，填寫上你的 **bot_token**

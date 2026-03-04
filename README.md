@@ -58,7 +58,7 @@ git clone https://github.com/NotKeKe/XMD.git
 cd XMD
 ```
 
-### 3. Frontend Build
+### 3. Frontend Build (if you use docker, you don't need to do this)
 
 To save download time, the project does not provide pre-built frontend files. 
 Please build the frontend yourself following these instructions:
@@ -121,6 +121,8 @@ Please build the frontend yourself following these instructions:
 
 - **First Start**
     - After the first run, a `config.toml` will be generated in the current directory, and the program will exit automatically.
+    - If you choose to use docker, then rename `config.toml.example` to `config.toml`.
+        - `cp config.toml.example config.toml`
 - **services_open**
     - Pay attention to `services_open`. It includes options for `discord` and `fastapi`. At least one must be set to `true` for the project to run.
     - If you enable `discord`, make sure to fill in your **bot_token** in the `discord` configuration.

@@ -1,0 +1,38 @@
+[services_open]
+# 組件開關 (全部名稱都應該是小寫), 值: true/false
+fastapi = true
+discord = false
+
+[twitter]
+# ----- 基礎配置 -----
+user_id = "YOUR_USER_ID"
+bot_id = "YOUR_BOT_ID"
+
+# ----- services setting -----
+# 是否只看 user_id 標記 bot_id 的推文，如果為 false，則會看所有標記 bot_id 的推文。 (true/false)
+x_only_you = true
+
+[discord]
+# ----- 基礎配置 -----
+bot_token = "YOUR_DISCORD_BOT_TOKEN"
+user_id = "YOUR_DISCORD_USER_ID"
+
+# ----- services setting -----
+discord = true
+discord_prefix = "=["
+# 是否只接收來自 discord.user_id 的訊息
+discord_only_you = false
+
+[fastapi]
+host = "127.0.0.1"
+port = 8000
+
+[settings]
+# twitter cookie 儲存路徑
+cookies_file = "./data/cookies.json"
+# 圖片、影片儲存路徑
+download_path = "./data/downloads"
+# 日誌儲存路徑
+log_path = "./logs"
+# 資料庫儲存路徑
+db_path = "./data/database.db"
