@@ -95,6 +95,19 @@ Please build the frontend yourself following these instructions:
     - Install dependencies: `pip install -r requirements.txt`
     - Run program: `python main.py`
 
+- **Using Docker**
+    - Build image: `docker build -t xmd .`
+    - Run container:
+      ```bash
+      docker run -d \
+        -v $(pwd)/config.toml:/app/config.toml \
+        -v $(pwd)/data:/app/data \
+        -v $(pwd)/logs:/app/logs \
+        -p 8000:8000 \
+        --name xmd xmd
+      ```
+
+
 ## 📜 Discord Command Description
 
 - `/set_channel`: Toggle auto-download for the current channel.

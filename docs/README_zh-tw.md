@@ -95,6 +95,19 @@ cd XMD
     - 安裝依賴：`pip install -r requirements.txt`
     - 執行程式：`python main.py`
 
+- **使用 Docker**
+    - 建置鏡像：`docker build -t xmd .`
+    - 執行容器：
+      ```bash
+      docker run -d \
+        -v $(pwd)/config.toml:/app/config.toml \
+        -v $(pwd)/data:/app/data \
+        -v $(pwd)/logs:/app/logs \
+        -p 8000:8000 \
+        --name xmd xmd
+      ```
+
+
 ## 📜 Discord 指令說明
 
 - `/set_channel`：開啟或關閉當前頻道的自動下載功能。

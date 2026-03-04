@@ -1,7 +1,7 @@
 [project]
 name = "xmd"
 version = "0.1.0"
-description = "Add your description here"
+description = "A powerful X (Twitter) media downloader with Discord bot and a Web UI (base on ts, tailwindcss and fastapi)."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

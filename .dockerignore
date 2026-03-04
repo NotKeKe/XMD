@@ -1,0 +1,14 @@
+.git/
+.venv/
+**/__pycache__/
+**/*.pyc
+**/node_modules/
+
+data/
+logs/
+docs/
+watch.bat
+
+frontend/node_modules/
+frontend/static/js/
+frontend/static/css/output.css
