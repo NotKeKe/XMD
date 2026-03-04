@@ -5,9 +5,11 @@
 **/node_modules/
 
 data/
-logs/
 docs/
-watch.bat
+logs/
+test/
+*.md
+*.example
 
 frontend/node_modules/
 frontend/static/js/
