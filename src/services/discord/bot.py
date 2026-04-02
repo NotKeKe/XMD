@@ -47,7 +47,7 @@ async def on_command_error(ctx: commands.Context, error):
     logging.error(f'Error in command {ctx.command}: {error}', exc_info=error) 
       
     if isinstance(error, commands.BadArgument):  
-        await ctx.send('Argument is invalid')   # english
+        await ctx.send('Argument is invalid')
     elif isinstance(error, commands.MissingRequiredArgument):  
         await ctx.send('Missing required argument')  
     elif isinstance(error, commands.CheckFailure):  
