@@ -54,18 +54,24 @@ class CommandCog(commands.Cog):
         tweet_id = get_tweet_id(url)
         infos, tweet = await TweetMediaDownloader.get_info(tweet_id)
 
+        url = infos['url']
+        author = infos['author']
+        text = infos['text']
+        media_len = infos['media']['len']
+        media_urls = infos['media']['urls']
+
         eb = Embed(title='Tweet Media Download', description=f"""
-URL: {infos['url']}
-Author: {infos['author']}
+URL: {url}
+Author: {author}
 Text:
 ```
-{infos['text']}
+{text}
 ```
 
 Medias:
-- Total length: {infos['media']['len']}
+- Total length: {media_len}
 - URLs: 
-{'\n'.join([f"  - {idx + 1}. {url} ({m_type})" for idx, (url, m_type) in enumerate(infos['media']['urls'])])}
+{'\n'.join([f"  - {idx + 1}. {item['url']} ({item['type']})" for idx, item in enumerate(media_urls) if item])}
 """.strip())
 
         view = ui.View()

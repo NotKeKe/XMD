@@ -16,3 +16,6 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[tool.uv.sources]
+tweety-ns = { git = "https://github.com/mahrtayyab/tweety.git", rev = "1dec1de" }

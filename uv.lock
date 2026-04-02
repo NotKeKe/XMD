@@ -1125,7 +1125,7 @@ wheels = [
 [[package]]
 name = "tweety-ns"
 version = "2.4.1"
-source = { registry = "https://pypi.org/simple" }
+source = { git = "https://github.com/mahrtayyab/tweety.git?rev=1dec1de#1dec1de8937c8bcd3fc1b77a000d02048e294532" }
 dependencies = [
     { name = "2captcha-python" },
     { name = "anticaptchaofficial" },
@@ -1136,10 +1136,6 @@ dependencies = [
     { name = "openpyxl" },
     { name = "python-magic" },
     { name = "python-magic-bin", marker = "sys_platform == 'win32'" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/78/f7/53be95bce4443edc418c4e23753104080e9805cb5100437bfb240778ca48/tweety_ns-2.4.1.tar.gz", hash = "sha256:759cac45a62e28807ad0d65e0f84dd260b03ad7327a6aedb379d490108f8f943", size = 91135, upload-time = "2025-07-15T06:28:43.028Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/32/91881ab45057de826bdc596064d7c932dd9cfbf6ce056417af8a0c21318c/tweety_ns-2.4.1-py3-none-any.whl", hash = "sha256:be8008e34c07314d69c5365bd3f2a059044601c1c70b22902b6c110c1b59ad81", size = 102441, upload-time = "2025-07-15T06:28:41.522Z" },
 ]
 
 [[package]]
@@ -1205,7 +1201,7 @@ requires-dist = [
     { name = "discord-py", specifier = ">=2.7.0" },
     { name = "fastapi", specifier = ">=0.134.0" },
     { name = "jinja2", specifier = ">=3.1.6" },
-    { name = "tweety-ns", specifier = ">=2.4.1" },
+    { name = "tweety-ns", git = "https://github.com/mahrtayyab/tweety.git?rev=1dec1de" },
     { name = "uvicorn", specifier = ">=0.41.0" },
     { name = "zipstream-ng", specifier = ">=1.9.0" },
 ]
