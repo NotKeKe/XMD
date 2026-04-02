@@ -39,6 +39,22 @@ async def on_ready():
         return
     logger.info(f'Logged in as {bot.user.name} (ID: {bot.user.id})')
 
+@bot.event  
+async def on_command_error(ctx: commands.Context, error):  
+    if isinstance(error, commands.CommandNotFound):  
+        return
+    
+    logging.error(f'Error in command {ctx.command}: {error}', exc_info=error) 
+      
+    if isinstance(error, commands.BadArgument):  
+        await ctx.send('Argument is invalid')   # english
+    elif isinstance(error, commands.MissingRequiredArgument):  
+        await ctx.send('Missing required argument')  
+    elif isinstance(error, commands.CheckFailure):  
+        await ctx.send('You do not have permission to use this command')  
+    else:  
+        await ctx.send('Something went wrong while executing this command')  
+
 @bot.check
 async def check_only_you(ctx: commands.Context):
     if not DISCORD_ONLY_YOU:
