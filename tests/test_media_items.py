@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from typing import Any
 
 from src.services.twitter.utils import (
     ANIMATED_GIF,
@@ -13,7 +14,7 @@ from src.services.twitter.utils import (
 )
 
 
-def make_tweet(media) -> SimpleNamespace:
+def make_tweet(media) -> Any:
     return SimpleNamespace(id=123, id_str="123", media=media)
 
 

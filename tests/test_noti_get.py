@@ -7,14 +7,24 @@
 from __future__ import annotations
 
 from types import SimpleNamespace
+from typing import Any
 
 from src.services.twitter import noti_get
 
 WATCH_ID = "703877871256731678"
 
 
+def fake(**attrs) -> Any:
+    """建立 duck-typing 的假推文／使用者物件。
+
+    回傳 `Any`：這些是給 `should_process_parent`／`_handle_notification` 用的假物件，
+    它們只需要有對應的屬性，不需要真的是 twscrape 的 `Tweet`／`User`。
+    """
+    return SimpleNamespace(**attrs)
+
+
 def test_should_process_parent_matches_int_user_id_to_string_config():
-    parent = SimpleNamespace(user=SimpleNamespace(id=703877871256731678))
+    parent = fake(user=fake(id=703877871256731678))
 
     assert (
         noti_get.should_process_parent(parent, only_watch_user=True, watch_user_id=WATCH_ID)
@@ -23,7 +33,7 @@ def test_should_process_parent_matches_int_user_id_to_string_config():
 
 
 def test_should_process_parent_rejects_different_user():
-    parent = SimpleNamespace(user=SimpleNamespace(id=123))
+    parent = fake(user=fake(id=123))
 
     assert (
         noti_get.should_process_parent(parent, only_watch_user=True, watch_user_id=WATCH_ID)
@@ -32,7 +42,7 @@ def test_should_process_parent_rejects_different_user():
 
 
 def test_should_process_parent_rejects_missing_user():
-    parent = SimpleNamespace(user=None)
+    parent = fake(user=None)
 
     assert (
         noti_get.should_process_parent(parent, only_watch_user=True, watch_user_id=WATCH_ID)
@@ -41,7 +51,7 @@ def test_should_process_parent_rejects_missing_user():
 
 
 def test_should_process_parent_ignores_user_when_not_watching():
-    parent = SimpleNamespace(user=None)
+    parent = fake(user=None)
 
     assert (
         noti_get.should_process_parent(parent, only_watch_user=False, watch_user_id=WATCH_ID)
@@ -50,7 +60,7 @@ def test_should_process_parent_ignores_user_when_not_watching():
 
 
 async def test_handle_notification_ignores_non_reply(monkeypatch):
-    tweet = SimpleNamespace(id_str="1", inReplyToTweetId=None)
+    tweet = fake(id_str="1", inReplyToTweetId=None)
 
     async def fake_get_tweet(tweet_id):
         raise AssertionError("非回覆推文不應該去抓父推文")
@@ -61,8 +71,8 @@ async def test_handle_notification_ignores_non_reply(monkeypatch):
 
 
 async def test_handle_notification_skips_parent_from_other_user(monkeypatch):
-    tweet = SimpleNamespace(id_str="1", inReplyToTweetId=999)
-    parent = SimpleNamespace(id_str="999", user=SimpleNamespace(id=1))
+    tweet = fake(id_str="1", inReplyToTweetId=999)
+    parent = fake(id_str="999", user=fake(id=1))
 
     async def fake_get_tweet(tweet_id):
         return parent
@@ -78,8 +88,8 @@ async def test_handle_notification_skips_parent_from_other_user(monkeypatch):
 
 
 async def test_handle_notification_skips_already_passed(monkeypatch):
-    tweet = SimpleNamespace(id_str="1", inReplyToTweetId=999)
-    parent = SimpleNamespace(id_str="999", user=SimpleNamespace(id=1))
+    tweet = fake(id_str="1", inReplyToTweetId=999)
+    parent = fake(id_str="999", user=fake(id=1))
 
     async def fake_get_tweet(tweet_id):
         return parent
@@ -95,8 +105,8 @@ async def test_handle_notification_skips_already_passed(monkeypatch):
 
 
 async def test_handle_notification_queues_parent_and_downloads(monkeypatch):
-    tweet = SimpleNamespace(id_str="1", inReplyToTweetId=999)
-    parent = SimpleNamespace(id_str="999", user=SimpleNamespace(id=703877871256731678))
+    tweet = fake(id_str="1", inReplyToTweetId=999)
+    parent = fake(id_str="999", user=fake(id=703877871256731678))
 
     class FakeQueue:
         def __init__(self):
