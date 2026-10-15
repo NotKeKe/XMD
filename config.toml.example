@@ -11,6 +11,10 @@ bot_id = "YOUR_BOT_ID"
 # ----- services setting -----
 # 是否只看 user_id 標記 bot_id 的推文，如果為 false，則會看所有標記 bot_id 的推文。 (true/false)
 x_only_you = true
+# 每輪最多抓幾則推文 (twscrape 的 limit，必須給，否則會無限翻頁)
+search_limit = 20
+# 當所有 X 帳號都被限流/鎖定時，最多等待幾秒才放棄這一輪
+wait_timeout = 300
 
 [discord]
 # ----- 基礎配置 -----
@@ -30,6 +34,10 @@ port = 8000
 [settings]
 # twitter cookie 儲存路徑
 cookies_file = "./data/cookies.json"
+# twscrape 帳號池資料庫路徑 (登入 session 會存在這裡)
+accounts_db = "./data/accounts.db"
+# twscrape 帳號在本機的識別名稱 (只是標籤，不需要等於 cookies 裡的帳號)
+account_name = "xmd"
 # 圖片、影片儲存路徑
 download_path = "./data/downloads"
 # 日誌儲存路徑

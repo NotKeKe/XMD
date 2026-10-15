@@ -1,6 +1,13 @@
 from pathlib import Path
 import tomllib
 import json
+import os
+
+# twscrape 預設會送出匿名 telemetry (含機器指紋)，這是自架工具，預設關閉。
+# 必須在 import twscrape 之前設定，所以放在 config 模組最上層。
+os.environ.setdefault("TWS_TELEMETRY", "0")
+# twscrape 的 loguru 等級；實際輸出由 src/services/twitter/utils.py 的橋接轉到本專案的 logging。
+os.environ.setdefault("TWS_LOG_LEVEL", "INFO")
 
 BASE_DIR = Path(__file__).parent.parent
 
@@ -47,7 +54,17 @@ if not COOKIES:
     raise ValueError("Cookies file is empty")
 elif not isinstance(COOKIES, dict):
     raise ValueError("Cookies file must be a dictionary")
-    
+
+# twscrape 的 cookie 登入硬性要求這兩個值 (has_required_cookies)，
+# 缺少任何一個，帳號池就永遠不會有 active 帳號，所以這裡先擋下來並說清楚原因。
+missing_cookies = [k for k in ("auth_token", "ct0") if not COOKIES.get(k)]
+if missing_cookies:
+    raise ValueError(
+        f"Cookies file is missing required keys: {', '.join(missing_cookies)} "
+        f"(twscrape needs auth_token and ct0 to log in). File: {COOKIES_FILE}"
+    )
+
+
 # path setting
 DOWNLOAD_DIR = Path(settings.get('download_path', DATA_DIR / "downloads"))
 DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -58,10 +75,19 @@ LOG_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = Path(settings.get('db_path', DATA_DIR / "database.db"))
 DB_PATH.parent.mkdir(parents=True, exist_ok=True)
 
+# twscrape 帳號池 (登入 session 存在這個 SQLite 裡) 與帳號在本機的識別名稱
+ACCOUNTS_DB = Path(settings.get('accounts_db', DATA_DIR / "accounts.db"))
+ACCOUNTS_DB.parent.mkdir(parents=True, exist_ok=True)
+X_ACCOUNT_NAME = str(settings.get('account_name', 'xmd'))
+
 # ---------- twitter ----------
 X_USER_ID = x_config.get('user_id', '')
 X_BOT_ID = x_config.get('bot_id', '')
 X_ONLY_WATCH_USER = x_config.get('x_only_you', True)
+# twscrape 的 search() limit 必須給，預設 -1 會無限翻頁
+X_SEARCH_LIMIT = int(x_config.get('search_limit', 20))
+# 所有帳號都被限流/鎖定時，最多等幾秒才放棄這一輪 (twscrape 預設是無限期等待)
+X_WAIT_TIMEOUT = float(x_config.get('wait_timeout', 300))
 
 # ---------- discord ----------
 DISCORD_BOT_TOKEN = discord_config.get('bot_token', '')

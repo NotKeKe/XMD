@@ -2,7 +2,7 @@ import discord
 from discord import Embed, ui
 from discord.ext import commands
 from discord.errors import HTTPException
-from tweety.types import Tweet, Media
+from twscrape import Tweet
 
 from src.services.twitter.utils import get_tweet_id, TweetMediaDownloader
 
@@ -23,9 +23,8 @@ class DownloadOneMdoal(ui.Modal, title='Download One'):
             await interaction.followup.send(f'Downloaded at `{path.resolve()}`', ephemeral=True, file=file)
         except HTTPException as e:
             if e.status == 413:
-                medias: list[Media] = self.tweet.media
-                m = medias[int(self.idx.value) - 1]
-                await interaction.followup.send(f'Downloaded at `{path.resolve()}`\n{m.direct_url}', ephemeral=True)
+                direct_url = TweetMediaDownloader.get_direct_url(self.tweet, int(self.idx.value) - 1)
+                await interaction.followup.send(f'Downloaded at `{path.resolve()}`\n{direct_url}', ephemeral=True)
             else:
                 raise
 

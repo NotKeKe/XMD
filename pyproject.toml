@@ -5,17 +5,29 @@ description = "A powerful X (Twitter) media downloader with Discord bot and a We
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiofiles>=24.1.0",
     "aiosqlite>=0.22.1",
     "discord-py>=2.7.0",
     "fastapi>=0.134.0",
+    "httpx>=0.26.0",
     "jinja2>=3.1.6",
-    "tweety-ns>=2.4.1",
+    "twscrape>=0.20.1,<0.21",
     "uvicorn>=0.41.0",
     "zipstream-ng>=1.9.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
 ]
 
 [tool.setuptools.packages.find]
 where = ["."]
 
-[tool.uv.sources]
-tweety-ns = { git = "https://github.com/mahrtayyab/tweety.git" }
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-ra"

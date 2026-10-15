@@ -8,7 +8,9 @@ data/
 docs/
 logs/
 test/
+tests/
 *.md
+config.toml
 
 frontend/node_modules/
 frontend/static/js/

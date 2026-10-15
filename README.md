@@ -36,7 +36,7 @@ A Python-based <strong>X (Twitter) media downloader</strong> integrating a Disco
 ## 🛠️ Tech Stack
 
 - Python 3.12
-- **[Tweety](https://github.com/mahrtayyab/tweety)**
+- **[twscrape](https://github.com/vladkens/twscrape)**
 - FastAPI (Web interface)
 - TypeScript (Web interface)
 - Tailwind CSS (Web interface)
@@ -84,6 +84,10 @@ Please build the frontend yourself following these instructions:
         ... // Other cookie key-value pairs
     }
     ```
+    - The `auth_token` and `ct0` keys are **required**; on startup XMD copies these
+      cookies into the [twscrape](https://github.com/vladkens/twscrape) account pool
+      stored at `data/accounts.db` (path and label configurable via `[settings] accounts_db`
+      and `account_name`).
 
 ### 5. Run
 
@@ -106,6 +110,15 @@ Please build the frontend yourself following these instructions:
         -p 8000:8000 \
         --name xmd xmd
       ```
+
+### 6. Tests (optional)
+
+The test suite is fully offline — it never calls the X API. It only needs `config.toml`
+and `data/cookies.json` to exist (the app's config module loads them at import time);
+`tests/conftest.py` creates placeholder files from the example defaults if they are missing.
+
+- **Using uv**: `uv run pytest`
+- **Using pip**: `pip install -r requirements-dev.txt` then `pytest`
 
 
 ## 📜 Discord Command Description
