@@ -10,7 +10,6 @@ import dataclasses
 import inspect
 
 import pytest
-
 from twscrape import (
     API,
     Media,

@@ -1,9 +1,11 @@
-import logging
 import asyncio
+import logging
 import random
+
 from twscrape import HttpError, NoAccountError
 
 from src.abc import ServicesABC
+
 from .noti_get import get_noti_tweets
 
 logger = logging.getLogger(__name__)
@@ -19,7 +21,7 @@ class TwitterService(ServicesABC):
             except HttpError as e:
                 logger.error(f'Failed to get tweets: {e}')
             except Exception:
-                logger.error('Failed to get tweets', exc_info=True)
+                logger.exception('Failed to get tweets')
 
             await asyncio.sleep(60*5 + random.uniform(10, 20)) # 休息至少 5 mins
 

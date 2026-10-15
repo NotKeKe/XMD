@@ -19,11 +19,17 @@ import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 from urllib.parse import urlparse
 
+import aiofiles
 import httpx
-from twscrape import API, MediaAnimated, MediaPhoto, MediaVideo, MediaVideoVariant, Tweet
+from twscrape import (
+    API,
+    MediaVideo,
+    MediaVideoVariant,
+    Tweet,
+)
 
 from src.config import (
     ACCOUNTS_DB,
@@ -265,12 +271,11 @@ async def _download_file(url: str, dest: Path) -> None:
         follow_redirects=True,
         timeout=DOWNLOAD_TIMEOUT,
         headers=DOWNLOAD_HEADERS,
-    ) as client:
-        async with client.stream("GET", url) as response:
-            response.raise_for_status()
-            with open(dest, "wb") as f:
-                async for chunk in response.aiter_bytes(DOWNLOAD_CHUNK_SIZE):
-                    f.write(chunk)
+    ) as client, client.stream("GET", url) as response:
+        response.raise_for_status()
+        async with aiofiles.open(dest, "wb") as f:
+            async for chunk in response.aiter_bytes(DOWNLOAD_CHUNK_SIZE):
+                await f.write(chunk)
 
 
 class TweetMediaDownloader:
@@ -321,7 +326,7 @@ class TweetMediaDownloader:
         return download_path
 
     @staticmethod
-    async def download_media(tweet_id: Optional[str] = None, tweet: Optional[Tweet] = None) -> list[Path]:
+    async def download_media(tweet_id: str | None = None, tweet: Tweet | None = None) -> list[Path]:
         if tweet is None:
             if not tweet_id:
                 raise ValueError('tweet_id or tweet is required')

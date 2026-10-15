@@ -1,13 +1,14 @@
+import asyncio
+
 from fastapi import APIRouter
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from twscrape import Tweet
-from zipstream import ZipStream, ZIP_DEFLATED
-import asyncio
-
-from .type import APIDownloadModel
+from zipstream import ZIP_DEFLATED, ZipStream
 
 from src.services.twitter.utils import TweetMediaDownloader, get_tweet, get_tweet_id
 from src.sqlite import get_all_tweet_media
+
+from .type import APIDownloadModel
 
 router = APIRouter(prefix='/api')
 

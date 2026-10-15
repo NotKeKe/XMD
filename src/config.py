@@ -1,7 +1,7 @@
-from pathlib import Path
-import tomllib
 import json
 import os
+import tomllib
+from pathlib import Path
 
 # twscrape 預設會送出匿名 telemetry (含機器指紋)，這是自架工具，預設關閉。
 # 必須在 import twscrape 之前設定，所以放在 config 模組最上層。

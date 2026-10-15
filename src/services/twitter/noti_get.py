@@ -66,4 +66,4 @@ async def get_noti_tweets():
         try:
             await _handle_notification(tweet)
         except Exception:
-            logger.error(f'Failed to handle notification from tweet {tweet.id_str}', exc_info=True)
+            logger.exception(f'Failed to handle notification from tweet {tweet.id_str}')
