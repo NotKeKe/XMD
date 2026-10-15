@@ -36,7 +36,7 @@
 ## 🛠️ 技術使用
 
 - python 3.12
-- **[tweety](https://github.com/mahrtayyab/tweety)**
+- **[twscrape](https://github.com/vladkens/twscrape)**
 - fastapi (用於提供 Web 介面)
 - typescript (用於提供 Web 介面)
 - tailwindcss (用於提供 Web 介面)
@@ -84,6 +84,9 @@ cd XMD
         ... # 其他 cookie 的鍵值對
     }
     ```
+    - `auth_token` 與 `ct0` 這兩個鍵是**必填**；啟動時 XMD 會把這些 cookie
+      寫進 [twscrape](https://github.com/vladkens/twscrape) 的帳號池（存放在 `data/accounts.db`，
+      路徑與名稱可透過 `[settings] accounts_db`、`account_name` 調整）。
 
 ### 5. 啟動
 
@@ -106,6 +109,15 @@ cd XMD
         -p 8000:8000 \
         --name xmd xmd
       ```
+
+### 6. 測試 (可選)
+
+測試完全離線，不會真的打 X API。它只要求 `config.toml` 與 `data/cookies.json` 存在
+（因為專案的 config 模組在 import 時就會讀它們）；若缺少，`tests/conftest.py` 會用範例預設值
+產生佔位檔案。
+
+- **使用 uv**：`uv run pytest`
+- **使用 pip**：`pip install -r requirements-dev.txt` 之後再執行 `pytest`
 
 
 ## 📜 Discord 指令說明

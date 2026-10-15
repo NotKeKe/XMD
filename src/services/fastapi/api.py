@@ -1,13 +1,14 @@
-from fastapi import APIRouter
-from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
-from tweety.types import Tweet
-from zipstream import ZipStream, ZIP_DEFLATED
 import asyncio
 
-from .type import APIDownloadModel
+from fastapi import APIRouter
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from twscrape import Tweet
+from zipstream import ZIP_DEFLATED, ZipStream
 
-from src.services.twitter.utils import TweetMediaDownloader, get_tweet_id, _get_client
+from src.services.twitter.utils import TweetMediaDownloader, get_tweet, get_tweet_id
 from src.sqlite import get_all_tweet_media
+
+from .type import APIDownloadModel
 
 router = APIRouter(prefix='/api')
 
@@ -32,8 +33,7 @@ async def download(model: APIDownloadModel):
     tweet = tweet_objs.get(tweet_id)
     
     if not tweet:
-        app = await _get_client()
-        tweet = await app.tweet_detail(tweet_id)
+        tweet = await get_tweet(tweet_id)
         tweet_objs[tweet_id] = tweet
 
     results = []
